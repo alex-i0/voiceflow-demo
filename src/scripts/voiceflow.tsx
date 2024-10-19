@@ -9,6 +9,7 @@ export const VoiceflowChat = () => {
     script.type = 'text/javascript';
 
     script.onload = function () {
+      // @ts-expect-error VoiceflowChat is defined
       window.voiceflow.chat.load({
         verify: { projectID: '671337603b38507f51635fa9' },
         url: 'https://general-runtime.voiceflow.com',
