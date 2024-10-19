@@ -1,4 +1,5 @@
-import VoiceflowChat from "@/src/scripts/voiceflow";
+
+import { VoiceflowChat } from "@/src/scripts/voiceflow";
 import Image from "next/image";
 
 export default function Home() {

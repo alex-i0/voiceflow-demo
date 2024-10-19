@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-const VoiceflowChat = () => {
+export const VoiceflowChat = () => {
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
@@ -10,7 +10,7 @@ const VoiceflowChat = () => {
 
     script.onload = function () {
       window.voiceflow.chat.load({
-        verify: { projectID: '670ea2e00799867cf9b28fef' },
+        verify: { projectID: '671337603b38507f51635fa9' },
         url: 'https://general-runtime.voiceflow.com',
         versionID: 'production',
       });
@@ -25,5 +25,3 @@ const VoiceflowChat = () => {
 
   return null;
 };
-
-export default VoiceflowChat;
