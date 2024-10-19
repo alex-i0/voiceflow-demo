@@ -1,3 +1,4 @@
+import VoiceflowChat from "@/src/scripts/voiceflow";
 import Image from "next/image";
 
 export default function Home() {
@@ -96,6 +97,7 @@ export default function Home() {
           Go to nextjs.org →
         </a>
       </footer>
+      <VoiceflowChat />
     </div>
   );
 }
