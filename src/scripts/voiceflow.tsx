@@ -59,7 +59,6 @@ const initializeVoiceflow = (isEnglishPath: boolean, pathname: string) => {
   });
 };
 
-
 const proactiveMessagesList: any =  {
   '/': {
     firstMessage: 'W czy mogę Ci pomóc?',
