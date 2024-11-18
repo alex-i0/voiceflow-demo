@@ -7,6 +7,7 @@ export const VoiceflowChat = () => {
   const scriptId = 'voiceflow-widget-script';
 
   // Check if the path contains '/en'
+  if (typeof window === 'undefined') return null;
   const isEnglishPath = pathname.includes('/en');
   const { body } = document;
   const script = document.createElement('script');
