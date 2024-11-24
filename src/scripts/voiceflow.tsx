@@ -27,11 +27,15 @@ const proactiveMessages = (isEnglishPath: boolean, pathname: string) => {
 const firstMessage = proactiveMessagesList[pathname]?.firstMessage;
 const secondMessage = proactiveMessagesList[pathname]?.secondMessage;
 const timeout = proactiveMessagesList[pathname]?.timeout;
-// @ts-expect-error VoiceflowChat is defined 
-  window.voiceflow.chat.proactive.push({
-    type: 'text',
-    payload: { message: firstMessage }
-  });
+const firstTimeout = proactiveMessagesList[pathname]?.firstTimeout;
+
+  setTimeout(() => {
+    // @ts-expect-error VoiceflowChat is defined 
+    window.voiceflow.chat.proactive.push({
+      type: 'text',
+      payload: { message: firstMessage }
+    });
+  }, firstTimeout); // 5000 milliseconds = 5 seconds
 
   if(!!secondMessage) {
     setTimeout(() => {
@@ -62,36 +66,43 @@ const initializeVoiceflow = (isEnglishPath: boolean, pathname: string) => {
 
 const proactiveMessagesList: any =  {
   '/': {
+    firstTimeout: 0,
     firstMessage: 'W czy mogę Ci pomóc?',
     secondMessage: null,
     timeout: 0,
   },
   '/nieruchomosci': {
+    firstTimeout: 0,
     firstMessage: 'Potrzebujesz wsparcia w poszukiwaniach? 🏢',
     secondMessage: 'Porozmawiaj z agentem AI',
     timeout: 5000,
   },
   '/uslugi': {
+    firstTimeout: 0,
     firstMessage: 'Potrzebujesz wsparcia?',
     secondMessage: 'Porozmawiajmy!',
     timeout: 5000,
   },
   '/o-nas': {
+    firstTimeout: 0,
     firstMessage: 'Czy potrzebujesz dodatkowych informacji?',
     secondMessage: 'Porozmawiajmy 👀',
     timeout: 5000,
   },
   '/kalkulator-m2': {
+    firstTimeout: 0,
     firstMessage: 'Potrzebujesz optymalizacji powierzchni? 📐',
     secondMessage: 'Albo szukasz biura na wynajem?',
     timeout: 5000,
   },
   '/blog': {
+    firstTimeout: 0,
     firstMessage: 'Czy możemy Ci jakoś pomóc?',
     secondMessage: 'Porozmawiaj z naszym doradcą AI 💬',
     timeout: 5000,
   },
   '/kontakt': {
+    firstTimeout: 5000,
     firstMessage: 'Potrzebujesz pomocy?',
     secondMessage: 'Zostaw swoje namiary, oddzwonimy! ☎️',
     timeout: 8000,
