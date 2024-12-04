@@ -151,15 +151,71 @@
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
   
-    async function getChatGPTReply(userMessage) {
-      // Add user message to conversation history
+    function displayLoader() {
+      const loaderElement = document.createElement('div');
+      loaderElement.id = 'loading-indicator';
+      loaderElement.className = 'flex mb-3';
+      loaderElement.innerHTML = `
+        <div class="bg-gray-200 text-black rounded-lg py-2 px-4 max-w-[70%] flex items-center">
+          <span class="dot">.</span>
+          <span class="dot">.</span>
+          <span class="dot">.</span>
+        </div>
+      `;
+      chatMessages.appendChild(loaderElement);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
 
-      const response = await sendMessage(userMessage, threadId);
-      conversationHistory.push({ role: 'user', content: userMessage });
-      conversationHistory.push({ role: 'assistant', content: response });
-  
-      // Display the assistant's response
-      displayReplyMessage(response);
+      // Add animation
+      const style = document.createElement('style');
+      style.innerHTML = `
+        #loading-indicator .dot {
+          animation: blink 1s infinite;
+        }
+        #loading-indicator .dot:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+        #loading-indicator .dot:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+        @keyframes blink {
+          0%, 100% {
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // Function to remove the loader
+    function removeLoader() {
+      const loaderElement = document.getElementById('loading-indicator');
+      if (loaderElement) {
+        loaderElement.remove();
+      }
+    }
+
+    async function getChatGPTReply(userMessage) {
+      // Display the loader
+      displayLoader();
+
+      try {
+        // Existing code to send the message
+        const response = await sendMessage(userMessage, threadId);
+        conversationHistory.push({ role: 'user', content: userMessage });
+        conversationHistory.push({ role: 'assistant', content: response });
+
+        // Remove the loader
+        removeLoader();
+
+        // Display the assistant's response
+        displayReplyMessage(response);
+      } catch (error) {
+        removeLoader();
+        console.error('Error fetching the response:', error);
+      }
     }
   
     const initializeChatWidget = async () => {
