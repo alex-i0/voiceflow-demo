@@ -47,10 +47,13 @@
     // Create the chat widget container
     const chatWidgetContainer = document.createElement('div');
     chatWidgetContainer.id = 'chat-widget-container';
+    chatWidgetContainer.className = 'flex flex-column justify-end items-end';
     document.body.appendChild(chatWidgetContainer);
   
     // Inject the HTML for the widget
     chatWidgetContainer.innerHTML = `
+      <div id="proactive-messages-container">
+      </div>
       <div style="background-color: #100F2D;" id="chat-bubble" class="w-16 h-16 rounded-full flex items-center justify-center cursor-pointer text-3xl">
         <img class="h-12 w-12" src="data:image/svg+xml,%3csvg%20viewBox='0%200%2036%2036'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg%20stroke='none'%20stroke-width='1'%20fill='none'%20fill-rule='evenodd'%3e%3cpath%20d='M18.0000533,7%20C24.6266329,7%2030,11.4789312%2030,16.9976931%20C30,22.5163617%2024.6266329,26.9953062%2018.0000533,26.9953062%20C17.123351,26.9971724%2016.2483812,26.9169271%2015.386606,26.7553699%20C14.0404188,27.7431078%2012.5315125,28.4873102%2010.9284053,28.9541197%20C10.4583473,29.0903502%209.95341047,28.916663%209.66660965,28.5199682%20C9.37982216,28.1234068%209.37297168,27.5894152%209.64952342,27.1855224%20C10.1505552,26.5172998%2010.5515886,25.7796289%2010.840002,24.9957036%20C7.9365286,23.3624038%206.10015838,20.3278759%206,16.9976931%20C6,11.4789179%2011.3733271,7%2018.0000533,7%20Z%20M18.0000533,18.0020932%20L14.0000889,18.0020932%20L13.8644511,18.0112196%20C13.3765531,18.0774186%2013.0005042,18.4957012%2013.0005042,19.0018279%20C13.0005042,19.5539661%2013.4480335,20.0015625%2014.0000889,20.0015625%20L18.0000533,20.0015625%20L18.135691,19.9924361%20C18.623589,19.9262371%2018.9996379,19.5079545%2018.9996379,19.0018279%20C18.9996379,18.4496896%2018.5521087,18.0020932%2018.0000533,18.0020932%20Z%20M22.0001244,14.001515%20L14.0000889,14.001515%20L13.8644511,14.0106414%20C13.3765531,14.0768404%2013.0005042,14.495123%2013.0005042,15.0012497%20C13.0005042,15.5533879%2013.4480335,16.0009843%2014.0000889,16.0009843%20L22.0001244,16.0009843%20L22.1357621,15.9918579%20C22.6236601,15.9256589%2022.999709,15.5073764%2022.999709,15.0012497%20C22.999709,14.4491115%2022.5521797,14.001515%2022.0001244,14.001515%20Z'%20fill='%23ffffff'%3e%3c/path%3e%3c/g%3e%3c/svg%3e" />
       </div>
@@ -58,7 +61,7 @@
         <div  style="background-color: #100F2D;" id="chat-header" class="flex justify-between items-center p-4 text-white rounded-t-lg">
         <div class="flex gap-x-2">
          <img class="w-6 h-6" src="https://cm4-production-assets.s3.amazonaws.com/1729313423218-apple-touch-icon.png" />  
-        <h3 class="m-0 text-lg">AI Agent</h3>
+        <h3 class="m-0 text-lg">Wirtualny Asystent</h3>
         </div>
           <button id="close-popup" class="bg-transparent border-none text-white cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -109,6 +112,7 @@
     });
   
     chatBubble.addEventListener('click', function() {
+      removeProactiveMessages();
       togglePopup();
       initializeChatWidget();
     });
@@ -211,7 +215,8 @@
         removeLoader();
 
         // Display the assistant's response
-        displayReplyMessage(response);
+        const cleanedResponse = removeBracketedText(removeAsteriskedText(response));
+        displayReplyMessage(cleanedResponse);
       } catch (error) {
         removeLoader();
         console.error('Error fetching the response:', error);
@@ -223,25 +228,24 @@
     
     //   assistant = await getAssistant('asst_bQIay4lQB3U9l265MevyHJCT');
       const response = await requestInitialization();
-      console.log(response)
       threadId = await response;
     }
   })();
 
 
   const requestInitialization = async () => {
-    const response = await fetch('https://reframe-ai.uc.r.appspot.com/api/initialize', {
+    const response = await fetch('http://localhost:3000/api/initialize', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
     });
-    const data = await response.json();
-    return data.threadId;
+    const {threadId} = await response.json();
+    return threadId;
   }
 
   const sendMessage = async (userMessage, threadId) => {
-    const response = await fetch('https://reframe-ai.uc.r.appspot.com/api/chat', {
+    const response = await fetch('http://localhost:3000/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -255,3 +259,116 @@
     const data = await response.json();
     return data;
   }
+
+  function removeBracketedText(text) {
+    // Regex to match any text within brackets, including the brackets
+    const bracketPattern = /【.*?】/g;
+    // Replace all matches with an empty string
+    return text.replace(bracketPattern, '');
+}
+
+function removeAsteriskedText(text) {
+  const asteriskPattern = /\*\*.*?\*\*/g;
+  return text.replace(asteriskPattern, '');
+}
+
+// Configuration object for proactive messages
+const proactiveMessagesList = {
+  '/': {
+    firstTimeout: 0,
+    firstMessage: 'W czym mogę Ci pomóc?',
+    secondMessage: null,
+    timeout: 0,
+  },
+  '/custom': {
+    firstTimeout: 0,
+    firstMessage: 'Potrzebujesz wsparcia w poszukiwaniach? 🏢',
+    secondMessage: 'Porozmawiaj z agentem AI',
+    timeout: 5000,
+  },
+  '/uslugi': {
+    firstTimeout: 0,
+    firstMessage: 'Potrzebujesz wsparcia?',
+    secondMessage: 'Porozmawiajmy!',
+    timeout: 5000,
+  },
+  '/o-nas': {
+    firstTimeout: 0,
+    firstMessage: 'Czy potrzebujesz dodatkowych informacji?',
+    secondMessage: 'Porozmawiajmy 👀',
+    timeout: 5000,
+  },
+  '/kalkulator-m2': {
+    firstTimeout: 0,
+    firstMessage: 'Potrzebujesz optymalizacji powierzchni? 📐',
+    secondMessage: 'Albo szukasz biura na wynajem?',
+    timeout: 5000,
+  },
+  '/blog': {
+    firstTimeout: 0,
+    firstMessage: 'Czy możemy Ci jakoś pomóc?',
+    secondMessage: 'Porozmawiaj z naszym doradcą AI 💬',
+    timeout: 5000,
+  },
+  '/kontakt': {
+    firstTimeout: 5000,
+    firstMessage: 'Potrzebujesz pomocy?',
+    secondMessage: 'Zostaw swoje namiary, oddzwonimy! ☎️',
+    timeout: 8000,
+  },
+};
+
+// Get the current page path
+const currentPath = window.location.pathname;
+
+// Check if there are messages configured for the current path
+if (proactiveMessagesList[currentPath]) {
+  const config = proactiveMessagesList[currentPath];
+  
+  // Function to add a message to the widget
+  const addMessageToWidget = (message) => {
+    const widget = document.querySelector('#proactive-messages-container'); // Update with actual widget selector
+    if (widget && message) {
+      const messageElement = document.createElement('div');
+      messageElement.className = `
+        bg-white 
+        text-gray-700 
+        shadow-md 
+        rounded-lg 
+        p-2
+        text-sm
+        mb-2 
+        border 
+        border-gray-200
+        max-w-fit
+        w-fit
+        max-w-max 
+        flex 
+        text-right
+        self-end
+        justify-self-end
+      `;
+      messageElement.textContent = message;
+      widget.appendChild(messageElement, widget.firstChild); // Add message to the top of the widget
+    }
+  };
+
+  // Display first message after the specified timeout
+  setTimeout(() => {
+    addMessageToWidget(config.firstMessage);
+
+    // Display second message if configured
+    if (config.secondMessage) {
+      setTimeout(() => {
+        addMessageToWidget(config.secondMessage);
+      }, config.timeout);
+    }
+  }, config.firstTimeout);
+}
+
+const removeProactiveMessages = () => {
+  const proactiveContainer = document.querySelector('#proactive-messages-container');
+  if (proactiveContainer) {
+    proactiveContainer.innerHTML = '';
+  }
+}
