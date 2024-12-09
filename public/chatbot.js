@@ -79,7 +79,7 @@
         <div id="chat-input-container" class="p-4">
           <div class="flex space-x-4 items-center">
             <input type="text" id="chat-input" class="flex-1 border border-gray-300 rounded-md px-4 py-2 outline-none w-3/4" placeholder="Message...">
-            <button id="chat-submit" class="bg-gray-800 text-white rounded-md px-4 py-2 cursor-pointer">Send</button>
+            <button id="chat-submit" class="bg-gray-800 text-white rounded-md px-4 py-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">Send</button>
           </div>
         </div>
       </div>
@@ -196,14 +196,14 @@
     // Function to remove the loader
     function removeLoader() {
       const loaderElement = document.getElementById('loading-indicator');
-      if (loaderElement) {
-        loaderElement.remove();
-      }
+      if (loaderElement) loaderElement.remove();
     }
 
     async function getChatGPTReply(userMessage) {
       // Display the loader
       displayLoader();
+      // Disable the send button
+      disableButton();
 
       try {
         // Existing code to send the message
@@ -217,6 +217,7 @@
         // Display the assistant's response
         const cleanedResponse = removeBracketedText(removeAsteriskedText(response));
         displayReplyMessage(cleanedResponse);
+        enableButton();
       } catch (error) {
         removeLoader();
         console.error('Error fetching the response:', error);
@@ -265,11 +266,6 @@
     const bracketPattern = /【.*?】/g;
     // Replace all matches with an empty string
     return text.replace(bracketPattern, '');
-}
-
-function removeAsteriskedText(text) {
-  const asteriskPattern = /\*\*.*?\*\*/g;
-  return text.replace(asteriskPattern, '');
 }
 
 // Configuration object for proactive messages
@@ -371,4 +367,19 @@ const removeProactiveMessages = () => {
   if (proactiveContainer) {
     proactiveContainer.innerHTML = '';
   }
+}
+
+
+const disableButton = () => {
+  const button = document.getElementById('chat-submit');
+
+  button.style.opacity = '0.5'; // Makes the button appear disabled
+  button.disabled = true; // Disables functionality
+}
+
+const enableButton = () => {
+  const button = document.getElementById('chat-submit');
+
+  button.style.opacity = '1'; // Restores opacity
+  button.disabled = false; // Enables functionality
 }
