@@ -1,8 +1,71 @@
 
+  // Configuration object for proactive messages
+  const proactiveMessagesList = {
+    '/': {
+      firstTimeout: 0,
+      firstMessage: 'W czym mogę Ci pomóc?',
+      secondMessage: null,
+      timeout: 0,
+    },
+    '/custom': {
+      firstTimeout: 0,
+      firstMessage: 'Potrzebujesz wsparcia w poszukiwaniach? 🏢',
+      secondMessage: 'Porozmawiaj z agentem AI',
+      timeout: 5000,
+    },
+    '/uslugi': {
+      firstTimeout: 0,
+      firstMessage: 'Potrzebujesz wsparcia?',
+      secondMessage: 'Porozmawiajmy!',
+      timeout: 5000,
+    },
+    '/o-nas': {
+      firstTimeout: 0,
+      firstMessage: 'Czy potrzebujesz dodatkowych informacji?',
+      secondMessage: 'Porozmawiajmy 👀',
+      timeout: 5000,
+    },
+    '/kalkulator-m2': {
+      firstTimeout: 0,
+      firstMessage: 'Potrzebujesz optymalizacji powierzchni? 📐',
+      secondMessage: 'Albo szukasz biura na wynajem?',
+      timeout: 5000,
+    },
+    '/blog': {
+      firstTimeout: 0,
+      firstMessage: 'Czy możemy Ci jakoś pomóc?',
+      secondMessage: 'Porozmawiaj z naszym doradcą AI 💬',
+      timeout: 5000,
+    },
+    '/kontakt': {
+      firstTimeout: 5000,
+      firstMessage: 'Potrzebujesz pomocy?',
+      secondMessage: 'Zostaw swoje namiary, oddzwonimy! ☎️',
+      timeout: 8000,
+    },
+  };
+
 (function() {
-    let conversationHistory = [
-      { role: 'assistant', content: 'Hej, jak mogę Ci dzisiaj pomóc?' }
-    ];
+  const addMessagesToConversationHistory = (history) => {
+    const {pathname} = window.location;
+  
+    // Check if there are messages configured for the current path
+    if (proactiveMessagesList[pathname]) {
+      const config = proactiveMessagesList[pathname];
+  
+      if(config.firstMessage){
+        history.push({ role: 'assistant', content: config.firstMessage });
+      }
+  
+      if(config.secondMessage) {
+        history.push({ role: 'assistant', content: config.secondMessage });
+      }
+    }
+  };
+
+    let conversationHistory = [];
+
+    addMessagesToConversationHistory(conversationHistory);
 
     // Add Tailwind CSS for styling
     document.head.insertAdjacentHTML(
@@ -94,7 +157,10 @@
     const closePopup = document.getElementById('close-popup');
   
     // Display initial assistant message
-    displayReplyMessage(conversationHistory[0].content);
+    conversationHistory.forEach(({content}) => {
+      displayReplyMessage(content);
+    })
+
   
     chatSubmit.addEventListener('click', function() {
       const message = chatInput.value.trim();
@@ -268,52 +334,6 @@
     return text.replace(bracketPattern, '');
 }
 
-// Configuration object for proactive messages
-const proactiveMessagesList = {
-  '/': {
-    firstTimeout: 0,
-    firstMessage: 'W czym mogę Ci pomóc?',
-    secondMessage: null,
-    timeout: 0,
-  },
-  '/custom': {
-    firstTimeout: 0,
-    firstMessage: 'Potrzebujesz wsparcia w poszukiwaniach? 🏢',
-    secondMessage: 'Porozmawiaj z agentem AI',
-    timeout: 5000,
-  },
-  '/uslugi': {
-    firstTimeout: 0,
-    firstMessage: 'Potrzebujesz wsparcia?',
-    secondMessage: 'Porozmawiajmy!',
-    timeout: 5000,
-  },
-  '/o-nas': {
-    firstTimeout: 0,
-    firstMessage: 'Czy potrzebujesz dodatkowych informacji?',
-    secondMessage: 'Porozmawiajmy 👀',
-    timeout: 5000,
-  },
-  '/kalkulator-m2': {
-    firstTimeout: 0,
-    firstMessage: 'Potrzebujesz optymalizacji powierzchni? 📐',
-    secondMessage: 'Albo szukasz biura na wynajem?',
-    timeout: 5000,
-  },
-  '/blog': {
-    firstTimeout: 0,
-    firstMessage: 'Czy możemy Ci jakoś pomóc?',
-    secondMessage: 'Porozmawiaj z naszym doradcą AI 💬',
-    timeout: 5000,
-  },
-  '/kontakt': {
-    firstTimeout: 5000,
-    firstMessage: 'Potrzebujesz pomocy?',
-    secondMessage: 'Zostaw swoje namiary, oddzwonimy! ☎️',
-    timeout: 8000,
-  },
-};
-
 // Get the current page path
 const currentPath = window.location.pathname;
 
@@ -364,9 +384,7 @@ if (proactiveMessagesList[currentPath]) {
 
 const removeProactiveMessages = () => {
   const proactiveContainer = document.querySelector('#proactive-messages-container');
-  if (proactiveContainer) {
-    proactiveContainer.innerHTML = '';
-  }
+  if (proactiveContainer) proactiveContainer.remove();
 }
 
 
