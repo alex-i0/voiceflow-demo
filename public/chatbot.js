@@ -234,7 +234,7 @@
 
 
   const requestInitialization = async () => {
-    const response = await fetch('http://localhost:3000/api/initialize', {
+    const response = await fetch('https://reframe-ai.uc.r.appspot.com/api/initialize', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -245,7 +245,7 @@
   }
 
   const sendMessage = async (userMessage, threadId) => {
-    const response = await fetch('http://localhost:3000/api/chat', {
+    const response = await fetch('https://reframe-ai.uc.r.appspot.com/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
