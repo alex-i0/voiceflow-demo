@@ -72,7 +72,7 @@
         <div id="chat-messages" class="flex-1 p-4 overflow-y-auto">
         <div class="flex flex-col justify-center items-center mb-6 p-8">
             <img class="w-16 h-16" src="https://cm4-production-assets.s3.amazonaws.com/1731862489163-unnamed-1.png" />
-            <h1 class="m-2 text-lg font-semibold">AI Agent</h1>
+            <h1 class="m-2 text-lg font-semibold">Wirtualny asystent</h1>
             <p class="text-gray-600">Jestem wirtualnym asystentem, ale posiadam dużą wiedzę i ludzkie cechy.</p>
         </div>
         </div>
