@@ -7,7 +7,7 @@
       secondMessage: null,
       timeout: 0,
     },
-    '/custom': {
+    '/nieruchomosci': {
       firstTimeout: 0,
       firstMessage: 'Potrzebujesz wsparcia w poszukiwaniach? 🏢',
       secondMessage: 'Porozmawiaj z agentem AI',
@@ -76,9 +76,6 @@
     // Inject custom CSS
     const style = document.createElement('style');
     style.innerHTML = `
-    .hidden {
-      display: none;
-    }
     #chat-widget-container {
       position: fixed;
       bottom: 20px;
@@ -110,7 +107,7 @@
     // Create the chat widget container
     const chatWidgetContainer = document.createElement('div');
     chatWidgetContainer.id = 'chat-widget-container';
-    chatWidgetContainer.className = 'flex flex-column justify-end items-end';
+    chatWidgetContainer.className = 'flex flex-column justify-end items-end absolute z-51';
     document.body.appendChild(chatWidgetContainer);
   
     // Inject the HTML for the widget
@@ -123,7 +120,7 @@
       <div id="chat-popup" class="hidden absolute bottom-20 right-0 w-96 bg-white rounded-md shadow-md flex flex-col transition-all text-sm">
         <div  style="background-color: #100F2D;" id="chat-header" class="flex justify-between items-center p-4 text-white rounded-t-lg">
         <div class="flex gap-x-2">
-         <img class="w-6 h-6" src="https://cm4-production-assets.s3.amazonaws.com/1729313423218-apple-touch-icon.png" />  
+         <img class="w-6 w-max-6 h-6 h-max-6" src="https://cm4-production-assets.s3.amazonaws.com/1729313423218-apple-touch-icon.png" />  
         <h3 class="m-0 text-lg">Wirtualny Asystent</h3>
         </div>
           <button id="close-popup" class="bg-transparent border-none text-white cursor-pointer">

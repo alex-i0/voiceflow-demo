@@ -4,7 +4,7 @@
 import { Hero } from "@/src/components/Hero";
 import Script from 'next/script';
 
-export default function Home() {
+export default function Custom() {
   return (
     <div >
       <Hero />
