@@ -211,7 +211,7 @@
       replyElement.className = 'flex mb-3';
       replyElement.innerHTML = `
         <div class="bg-gray-200 text-black rounded-lg py-2 px-4 max-w-[70%]">
-          ${message}
+          ${parseMarkdownToHtml(message)}
         </div>
       `;
       chatMessages.appendChild(replyElement);
@@ -278,7 +278,7 @@
         removeLoader();
 
         // Display the assistant's response
-        const cleanedResponse = removeBracketedText(removeAsteriskedText(response));
+        const cleanedResponse = removeBracketedText(response);
         displayReplyMessage(cleanedResponse);
         enableButton();
       } catch (error) {
@@ -397,4 +397,22 @@ const enableButton = () => {
 
   button.style.opacity = '1'; // Restores opacity
   button.disabled = false; // Enables functionality
+}
+
+function parseMarkdownToHtml(markdown) {
+  // Replace **text** with <b>text</b> for bold
+  markdown = markdown.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+  // Replace *text* or _text_ with <i>text</i> for italics
+  markdown = markdown.replace(/\*(.*?)\*/g, '<i>$1</i>');
+  markdown = markdown.replace(/_(.*?)_/g, '<i>$1</i>');
+
+  // Replace - Item or * Item with <ul><li>Item</li></ul> for lists
+  markdown = markdown.replace(/(?:^|\n)- (.*?)(?:\n|$)/g, '<ul><li>$1</li></ul>');
+  markdown = markdown.replace(/(?:^|\n)\* (.*?)(?:\n|$)/g, '<ul><li>$1</li></ul>');
+
+  // Replace \n\n with <br> for line breaks
+  markdown = markdown.replace(/\n/g, '<br>');
+
+  return markdown;
 }
