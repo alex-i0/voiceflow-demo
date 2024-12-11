@@ -118,10 +118,10 @@
         <img class="h-12 w-12" src="data:image/svg+xml,%3csvg%20viewBox='0%200%2036%2036'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg%20stroke='none'%20stroke-width='1'%20fill='none'%20fill-rule='evenodd'%3e%3cpath%20d='M18.0000533,7%20C24.6266329,7%2030,11.4789312%2030,16.9976931%20C30,22.5163617%2024.6266329,26.9953062%2018.0000533,26.9953062%20C17.123351,26.9971724%2016.2483812,26.9169271%2015.386606,26.7553699%20C14.0404188,27.7431078%2012.5315125,28.4873102%2010.9284053,28.9541197%20C10.4583473,29.0903502%209.95341047,28.916663%209.66660965,28.5199682%20C9.37982216,28.1234068%209.37297168,27.5894152%209.64952342,27.1855224%20C10.1505552,26.5172998%2010.5515886,25.7796289%2010.840002,24.9957036%20C7.9365286,23.3624038%206.10015838,20.3278759%206,16.9976931%20C6,11.4789179%2011.3733271,7%2018.0000533,7%20Z%20M18.0000533,18.0020932%20L14.0000889,18.0020932%20L13.8644511,18.0112196%20C13.3765531,18.0774186%2013.0005042,18.4957012%2013.0005042,19.0018279%20C13.0005042,19.5539661%2013.4480335,20.0015625%2014.0000889,20.0015625%20L18.0000533,20.0015625%20L18.135691,19.9924361%20C18.623589,19.9262371%2018.9996379,19.5079545%2018.9996379,19.0018279%20C18.9996379,18.4496896%2018.5521087,18.0020932%2018.0000533,18.0020932%20Z%20M22.0001244,14.001515%20L14.0000889,14.001515%20L13.8644511,14.0106414%20C13.3765531,14.0768404%2013.0005042,14.495123%2013.0005042,15.0012497%20C13.0005042,15.5533879%2013.4480335,16.0009843%2014.0000889,16.0009843%20L22.0001244,16.0009843%20L22.1357621,15.9918579%20C22.6236601,15.9256589%2022.999709,15.5073764%2022.999709,15.0012497%20C22.999709,14.4491115%2022.5521797,14.001515%2022.0001244,14.001515%20Z'%20fill='%23ffffff'%3e%3c/path%3e%3c/g%3e%3c/svg%3e" />
       </div>
       <div id="chat-popup" class="hidden absolute bottom-20 right-0 w-96 bg-white rounded-md shadow-md flex flex-col transition-all text-sm">
-        <div  style="background-color: #100F2D;" id="chat-header" class="flex justify-between items-center p-4 text-white rounded-t-lg">
+        <div  style="background-color: #100F2D;" id="chat-header" class="flex justify-between items-center p-2 text-sm text-white rounded-t-lg">
         <div class="flex gap-x-2">
          <img class="w-6 w-max-6 h-6 h-max-6" src="https://cm4-production-assets.s3.amazonaws.com/1729313423218-apple-touch-icon.png" />  
-        <h3 class="m-0 text-lg">Wirtualny Asystent</h3>
+        <h3 class="m-0 text-base">Wirtualny Asystent</h3>
         </div>
           <button id="close-popup" class="bg-transparent border-none text-white cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -132,7 +132,7 @@
         <div id="chat-messages" class="flex-1 p-4 overflow-y-auto">
         <div class="flex flex-col justify-center items-center mb-6 p-8">
             <img class="w-16 h-16" src="https://cm4-production-assets.s3.amazonaws.com/1731862489163-unnamed-1.png" />
-            <h1 class="m-2 text-lg font-semibold">Wirtualny asystent</h1>
+            <h1 class="m-2 text-lg font-semibold">Wirtualny Asystent</h1>
             <p class="text-gray-600">Jestem wirtualnym asystentem, ale posiadam dużą wiedzę i ludzkie cechy.</p>
         </div>
         </div>
@@ -298,7 +298,7 @@
 
 
   const requestInitialization = async () => {
-    const response = await fetch('https://reframe-ai.uc.r.appspot.com/api/initialize', {
+    const response = await fetch('http://localhost:3000/api/initialize', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -309,7 +309,7 @@
   }
 
   const sendMessage = async (userMessage, threadId) => {
-    const response = await fetch('https://reframe-ai.uc.r.appspot.com/api/chat', {
+    const response = await fetch('http://localhost:3000/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
