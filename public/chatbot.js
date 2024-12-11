@@ -46,6 +46,11 @@
   };
 
 (function() {
+  window.addEventListener('beforeunload', () => {
+    
+});
+
+
   const addMessagesToConversationHistory = (history) => {
     const {pathname} = window.location;
   
@@ -298,7 +303,7 @@
 
 
   const requestInitialization = async () => {
-    const response = await fetch('http://localhost:3000/api/initialize', {
+    const response = await fetch('https://reframe-ai.uc.r.appspot.com/api/initialize', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -309,7 +314,7 @@
   }
 
   const sendMessage = async (userMessage, threadId) => {
-    const response = await fetch('http://localhost:3000/api/chat', {
+    const response = await fetch('https://reframe-ai.uc.r.appspot.com/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -323,6 +328,20 @@
     const data = await response.json();
     return data;
   }
+
+  // const sendEmailWithChatHistory = async (threadId) => {
+  //   const response = await fetch('http://localhost:3000/api/chat', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       userMessage,
+  //       threadId,
+  //       assistantId: 'asst_bQIay4lQB3U9l265MevyHJCT',
+  //     }),
+  //   });
+  // }
 
   function removeBracketedText(text) {
     // Regex to match any text within brackets, including the brackets
