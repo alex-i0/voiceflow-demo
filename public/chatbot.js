@@ -46,11 +46,6 @@
   };
 
 (function() {
-  window.addEventListener('beforeunload', () => {
-    
-});
-
-
   const addMessagesToConversationHistory = (history) => {
     const {pathname} = window.location;
   
@@ -163,7 +158,6 @@
       displayReplyMessage(content);
     })
 
-  
     chatSubmit.addEventListener('click', function() {
       const message = chatInput.value.trim();
       if (!message) return;
@@ -198,6 +192,14 @@
     }
   
     let threadId = null;
+
+    window.addEventListener('beforeunload', () => {
+      try {
+        if(!!threadId && threadId !== undefined) sendEmailWithChatHistory(threadId);
+      } catch (error) {
+        console.error('Error sending chat history:', error);
+      }
+  });
   
     function displayUserMessage(message) {
       const messageElement = document.createElement('div');
@@ -301,9 +303,13 @@
     }
   })();
 
+  //http://localhost:3000
+  //https://reframe-ai.uc.r.appspot.com
+  const ENDPOINT = 'https://reframe-ai.uc.r.appspot.com';
+
 
   const requestInitialization = async () => {
-    const response = await fetch('https://reframe-ai.uc.r.appspot.com/api/initialize', {
+    const response = await fetch(`${ENDPOINT}/api/initialize`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -314,7 +320,7 @@
   }
 
   const sendMessage = async (userMessage, threadId) => {
-    const response = await fetch('https://reframe-ai.uc.r.appspot.com/api/chat', {
+    const response = await fetch(`${ENDPOINT}/api/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -329,19 +335,11 @@
     return data;
   }
 
-  // const sendEmailWithChatHistory = async (threadId) => {
-  //   const response = await fetch('http://localhost:3000/api/chat', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       userMessage,
-  //       threadId,
-  //       assistantId: 'asst_bQIay4lQB3U9l265MevyHJCT',
-  //     }),
-  //   });
-  // }
+  const sendEmailWithChatHistory = (id) => {
+    const url = `${ENDPOINT}/api/send-history`;
+    const payload = new Blob([JSON.stringify({ threadId: id })], {type: 'application/json'});
+    navigator.sendBeacon(url, payload);
+  }
 
   function removeBracketedText(text) {
     // Regex to match any text within brackets, including the brackets
