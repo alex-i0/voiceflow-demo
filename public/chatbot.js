@@ -133,12 +133,12 @@
         <div class="flex flex-col justify-center items-center mb-6 p-8">
             <img class="w-16 h-16" src="https://cm4-production-assets.s3.amazonaws.com/1731862489163-unnamed-1.png" />
             <h1 class="m-2 text-lg font-semibold">Wirtualny Asystent</h1>
-            <p class="text-gray-600">Jestem wirtualnym asystentem, ale posiadam dużą wiedzę i ludzkie cechy.</p>
+            <p class="text-gray-600 text-center">Jestem wirtualnym asystentem z BNM, dostępny dla Ciebie 24/7.</p>
         </div>
         </div>
         <div id="chat-input-container" class="p-4">
           <div class="flex space-x-4 items-center">
-            <input type="text" id="chat-input" class="flex-1 border border-gray-300 rounded-md px-4 py-2 outline-none w-3/4" placeholder="Message...">
+            <textarea type="text" rows="1" id="chat-input" class="flex-1 border border-gray-300 rounded-md px-4 py-2 outline-none w-3/4" placeholder="Message..."></textarea>
             <button id="chat-submit" class="bg-gray-800 text-white rounded-md px-4 py-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">Send</button>
           </div>
         </div>
@@ -167,8 +167,14 @@
       getChatGPTReply(message);
     });
   
-    chatInput.addEventListener('keyup', function(event) {
+    chatInput.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
+        if (event.shiftKey) {
+          // Allow Shift+Enter to add a new line
+          return;
+        }
+        // Prevent new line for Enter without Shift and submit the form
+        event.preventDefault();
         chatSubmit.click();
       }
     });
@@ -206,7 +212,7 @@
       messageElement.className = 'flex justify-end mb-3';
       messageElement.innerHTML = `
         <div class="bg-gray-800 text-white rounded-lg py-2 px-4 max-w-[70%]">
-          ${message}
+          ${formatMessageWithNewLines(message)}
         </div>
       `;
       chatMessages.appendChild(messageElement);
@@ -432,4 +438,8 @@ function parseMarkdownToHtml(markdown) {
   markdown = markdown.replace(/\n/g, '<br>');
 
   return markdown;
+}
+
+function formatMessageWithNewLines(message) {
+  return message.replace(/\n/g, '<br>');
 }
